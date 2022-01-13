@@ -1,25 +1,55 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import TitleScreen from "./TitleScreen";
+import React from "react";
+import TrackManager from "./TrackManager";
+import AudioScreen from "./AudioScreen";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// http://www.openmusicarchive.org/ could be used for example music
+
+
+class App extends React.Component
+{
+  state = {
+    fileContent: null
+  }
+
+  constructor(props)
+  {
+    super(props)
+    this.trackManager = new TrackManager();
+  }
+
+  render()
+  {
+
+    const setFileContent = (content) =>
+    {
+      this.trackManager.load(content).then(manager=>{ manager.play(); })
+    };
+
+    return (
+      <div className="App">
+        { this.state.fileContent === null &&
+          <header className="App-header">
+              <TitleScreen
+                onOpen={(fileState)=>{
+                  setFileContent(fileState.content);
+                }}
+              />
+          </header>
+        }
+        { this.state.fileContent !== null &&
+          <header className="App-header">
+            <AudioScreen
+              trackManager={this.trackManager}
+            />
+          </header>
+        }
+      </div>
+    );
+  }
+
 }
 
 export default App;
