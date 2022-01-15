@@ -28,7 +28,7 @@ function AudioScreen(props) {
   return (
     <CanvasContext.Provider value={{ ctx }}>
       <div
-        onClick={props.trackManager.togglePlayback}
+        onClick={props.trackManager.pauseUnpause}
       >
         <canvas width={props.width} height={props.height} ref={canvasRef}></canvas>
         <Rectangle

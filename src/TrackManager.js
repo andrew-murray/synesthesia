@@ -5,12 +5,15 @@ class TrackManager
   load = (audioContent) =>
   {
     return Tone.getContext().decodeAudioData(audioContent).then((decoded)=>{
+      // fixme: this code/equivalent needs to be called somewhere
+      // await Tone.start();
       this.buffer = decoded;
       if(this.player)
       {
         this.player.stop();
       }
-      this.player = new Tone.Player(decoded).toDestination();
+      this.player = new Tone.Player(decoded).toDestination().sync();
+      this.player.start();
       return this;
     })
   }
@@ -18,29 +21,34 @@ class TrackManager
   play = () =>
   {
     if(!this.player){ return; }
-    this.player.start();
+    Tone.Transport.start();
+  }
+
+  pause = () =>
+  {
+    if(!this.player){ return; }
+    Tone.Transport.pause();
   }
 
   stop = () =>
   {
     if(!this.player){ return; }
-    this.player.stop();
+    Tone.Transport.stop();
   }
 
-  playing = () =>
-  {
-    if(this.player)
-    {
-      return this.player.state === "started";
-    }
-    return false;
+  getState = () => {
+    return Tone.Transport.state;
   }
 
-  togglePlayback = () => {
+  toggle = () => {
     if(!this.player){ return; }
-    if( this.playing() )
+    Tone.Transport.toggle();
+  }
+
+  pauseUnpause = () => {
+    if(this.getState() === "started")
     {
-      this.stop();
+      this.pause();
     }
     else
     {
