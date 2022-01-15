@@ -1,17 +1,18 @@
 import React from 'react';
-import { Stage, Layer } from 'react-konva';
+import PropTypes from 'prop-types';
 
 function AudioScreen(props) {
-  // width={width} height={height} style={this.props.style}
+  // width={props.width}
+  // height={props.height}
   return (
-    <Stage>
-      <Layer>
-      </Layer>
-    </Stage>
+    <React.Fragment
+    />
   );
 }
 
 AudioScreen.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
 
 export default AudioScreen;
