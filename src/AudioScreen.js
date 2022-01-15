@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, createContext, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import TrackManager from "./TrackManager";
 
 export const CanvasContext = createContext();
 
@@ -26,18 +27,23 @@ function AudioScreen(props) {
 
   return (
     <CanvasContext.Provider value={{ ctx }}>
-      <canvas width={props.width} height={props.height} ref={canvasRef}></canvas>
-      <Rectangle
-        color="red"
-        coordinates={{ x: props.width * 0.25, y: props.height * 0.25, width: props.width*0.5, height: props.height * 0.5}}
-      />
+      <div
+        onClick={props.trackManager.togglePlayback}
+      >
+        <canvas width={props.width} height={props.height} ref={canvasRef}></canvas>
+        <Rectangle
+          color="red"
+          coordinates={{ x: props.width * 0.25, y: props.height * 0.25, width: props.width*0.5, height: props.height * 0.5}}
+        />
+      </div>
     </CanvasContext.Provider>
   );
 }
 
 AudioScreen.propTypes = {
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
+  trackManager: PropTypes.instanceOf(TrackManager).isRequired
 };
 
 export default AudioScreen;

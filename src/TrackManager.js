@@ -21,10 +21,31 @@ class TrackManager
     this.player.start();
   }
 
-  pause = () =>
+  stop = () =>
   {
     if(!this.player){ return; }
     this.player.stop();
+  }
+
+  playing = () =>
+  {
+    if(this.player)
+    {
+      return this.player.state === "started";
+    }
+    return false;
+  }
+
+  togglePlayback = () => {
+    if(!this.player){ return; }
+    if( this.playing() )
+    {
+      this.stop();
+    }
+    else
+    {
+      this.play();
+    }
   }
 };
 
