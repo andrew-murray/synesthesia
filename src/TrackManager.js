@@ -6,6 +6,10 @@ class TrackManager
   {
     return Tone.getContext().decodeAudioData(audioContent).then((decoded)=>{
       this.buffer = decoded;
+      if(this.player)
+      {
+        this.player.stop();
+      }
       this.player = new Tone.Player(decoded).toDestination();
       return this;
     })
@@ -22,14 +26,6 @@ class TrackManager
     if(!this.player){ return; }
     this.player.stop();
   }
-
-  stop = () =>
-  {
-    if(!this.player){ return; }
-    this.player.stop();
-    this.player.seek(0);
-  }
-
 };
 
 export default TrackManager;

@@ -11,7 +11,7 @@ import AudioScreen from "./AudioScreen";
 class App extends React.Component
 {
   state = {
-    fileContent: null
+    active: false
   }
 
   constructor(props)
@@ -25,12 +25,15 @@ class App extends React.Component
 
     const setFileContent = (content) =>
     {
-      this.trackManager.load(content).then(manager=>{ manager.play(); })
+
+      this.trackManager.load(content)
+        .then(manager=>{ manager.play(); })
+        .then( ()=>{this.setState( { active: true } );} )
     };
 
     return (
       <div className="App">
-        { this.state.fileContent === null &&
+        { this.state.active === false &&
           <header className="App-header">
               <TitleScreen
                 onOpen={(fileState)=>{
@@ -39,7 +42,7 @@ class App extends React.Component
               />
           </header>
         }
-        { this.state.fileContent !== null &&
+        { this.state.active === true &&
           <header className="App-header">
             <AudioScreen
               trackManager={this.trackManager}

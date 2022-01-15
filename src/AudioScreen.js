@@ -1,11 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types';
+import React from 'react';
+import { Stage, Layer } from 'react-konva';
 
 function AudioScreen(props) {
+  // width={width} height={height} style={this.props.style}
   return (
-    <div>
-      Playing Audio...
-    </div>
+    <Stage>
+      <Layer>
+      </Layer>
+    </Stage>
   );
 }
 
