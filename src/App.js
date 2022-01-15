@@ -48,6 +48,10 @@ class App extends React.Component
         .then( ()=>{this.setState( { active: true } );} )
     };
 
+    // arbitrary offset to ensure we don't create a pointless scroll bar
+    // todo: just disable the scroll bar explicitly and render pixel-perfect
+    const modifiedHeight = this.state.height - 1;
+
     return (
       <div className="App">
         { this.state.active === false &&
@@ -64,7 +68,7 @@ class App extends React.Component
             <AudioScreen
               trackManager={this.trackManager}
               width={this.state.width}
-              height={this.state.height}
+              height={modifiedHeight}
             />
           </header>
         }
