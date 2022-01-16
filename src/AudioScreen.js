@@ -17,6 +17,31 @@ function Rectangle({ color, coordinates }) {
   return null;
 }
 
+function plotter(props)
+{
+  if(props.ctx)
+  {
+    const frequencyBytes = props.trackManager.getFrequencyData();
+    const bufferLength = frequencyBytes.length
+
+    props.ctx.fillStyle = 'rgb(0, 0, 0)';
+    props.ctx.fillRect(0, 0, props.width, props.height);
+    //Draw spectrum
+    const barWidth = (props.width / bufferLength);
+    for (let i = 0; i < bufferLength; i++) {
+      // const barHeight = (frequencyBytes[i] + 140) * 2;
+      const barHeight = Math.floor( (frequencyBytes[i] / 255.0) * props.height);
+      const colorScalar = (frequencyBytes[i] / 255.0)  + 0.25;
+      const redMin = 50;
+      const redScalar = Math.min( Math.floor(redMin + colorScalar * (255 - redMin)), 255);
+      const posX = barWidth * i;
+      props.ctx.fillStyle = 'rgb(' + redScalar + ', 50, 50)';
+      const posY = props.height - barHeight;
+      props.ctx.fillRect(posX, posY, barWidth, barHeight);
+    }
+  }
+}
+
 function AudioScreen(props) {
   const canvasRef = useRef();
   const [ctx, setCtx] = useState(null);
@@ -25,6 +50,7 @@ function AudioScreen(props) {
     setCtx(canvasRef.current.getContext("2d"));
   }, []);
 
+  // onClick={()=>{plotter({ctx : ctx, trackManager: props.trackManager, width: props.width, height: props.height});}}
   return (
     <CanvasContext.Provider value={{ ctx }}>
       <div
