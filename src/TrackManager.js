@@ -1,22 +1,41 @@
 import * as Tone from 'tone';
 
+let toneInitialised = false;
+
+const ensureToneInitialised = async () => {
+  if(toneInitialised)
+  {
+    return Promise.resolve();
+  }
+  else
+  {
+    return Tone.start().then( () =>{ toneInitialised = true; } );
+  }
+};
+
 class TrackManager
 {
 
   constructor()
   {
-    this.analyser = Tone.getContext().createAnalyser();
-    // todo: tonejs may wrap these options under other names
-    // it's possible I shouldn't use tone for this,
-    // this.analyser.frequencyBinCount = 256;
-    this.frequencyBuffer = new Uint8Array(this.analyser.frequencyBinCount);
-    // this.analyser.fftSize = 256;
-    // this.timeDomainBuffer = new Uint8Array(this.analyser.fftSize);
+    ensureToneInitialised();
+  }
+
+  configureAnalysers = (resolution) =>
+  {
+    if(!this.analyser)
+    {
+      this.analyser = Tone.getContext().createAnalyser();
+      this.player.connect(this.analyser);
+      this.analyser.fftSize = resolution;
+      this.frequencyBuffer = new Uint8Array(this.analyser.frequencyBinCount);
+      this.timeDomainBuffer = new Uint8Array(this.analyser.fftSize);
+    }
   }
 
   load = (audioContent) =>
   {
-    return Tone.getContext().decodeAudioData(audioContent).then((decoded)=>{
+    return ensureToneInitialised().then( () => { return Tone.getContext().decodeAudioData(audioContent).then((decoded)=>{
       // fixme: this code/equivalent needs to be called somewhere
       // await Tone.start();
       this.buffer = decoded;
@@ -25,10 +44,9 @@ class TrackManager
         this.player.stop();
       }
       this.player = new Tone.Player(decoded).toDestination().sync();
-      this.player.connect(this.analyser);
       this.player.start();
       return this;
-    })
+    })});
   }
 
   play = () =>
@@ -37,15 +55,17 @@ class TrackManager
     Tone.Transport.start();
   }
 
-  getFrequencyData = () =>
+  getFrequencyData = (size) =>
   {
+    if(!this.analyser || this.analyser.fftSize !== size){ this.configureAnalysers(size); }
     this.analyser.getByteFrequencyData(this.frequencyBuffer);
     return this.frequencyBuffer;
   }
 
-  getTimeData = () =>
+  getTimeData = (size) =>
   {
-    this.analyser.getTimeDomainData(this.frequencyBuffer);
+    if(!this.analyser || this.analyser.fftSize !== size){ this.configureAnalysers(size); }
+    this.analyser.getTimeDomainData(this.timeDomainBuffer);
     return this.timeDomainBuffer;
   }
 
