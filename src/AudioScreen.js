@@ -1,6 +1,7 @@
 import React, { useEffect, createContext, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import TrackManager from "./TrackManager";
+import PlaybackControls from "./PlaybackControls";
 import * as mathjs from "mathjs";
 
 export const CanvasContext = createContext();
@@ -139,13 +140,19 @@ function speakerPlotter(props)
   }
 }
 
+
+const AnimationModes = [
+  "BARS",
+  "RADIAL"
+];
+
 const animate = (ctx, width, height, trackManager, mode) =>
 {
-  if( mode === "bars" )
+  if( mode === AnimationModes[0] )
   {
     plotter({ctx: ctx, width: width, height: height, trackManager: trackManager});
   }
-  else if( mode === "radial")
+  else if( mode === AnimationModes[1])
   {
     speakerPlotter({ctx: ctx, width: width, height: height, trackManager: trackManager});
   }
@@ -159,6 +166,7 @@ const animate = (ctx, width, height, trackManager, mode) =>
 function AudioScreen(props) {
   const canvasRef = useRef();
   const [ctx, setCtx] = useState(null);
+  const [animationMode, setAnimationMode] = useState(0);
 
   useEffect(() => {
     setCtx(canvasRef.current.getContext("2d"));
@@ -181,7 +189,7 @@ function AudioScreen(props) {
         }
         if(ctx)
         {
-          animate(ctx, props.width, props.height, props.trackManager, props.mode ? props.mode : "radial");
+          animate(ctx, props.width, props.height, props.trackManager, AnimationModes[animationMode]);
         }
       },
       Math.floor(1000/20.0) // 20 fps in ms
@@ -191,12 +199,30 @@ function AudioScreen(props) {
     };
   });
 
+  const onNextVis = () =>
+  {
+    const nextMode = Math.min( animationMode + 1, AnimationModes.length - 1 );
+    setAnimationMode( nextMode );
+  };
+
+  const onPrevVis = () =>
+  {
+    const nextMode = Math.max( animationMode - 1, 0 );
+    setAnimationMode( nextMode );
+  };
+
   return (
     <CanvasContext.Provider value={{ ctx }}>
       <div
         onClick={props.trackManager.pauseUnpause}
       >
         <canvas width={props.width} height={props.height} ref={canvasRef}></canvas>
+        <div style={{position: "fixed", bottom: "1em", right: "1em"}}>
+          <PlaybackControls
+            onPrev={ animationMode !== 0 ? onPrevVis : undefined}
+            onNext={ animationMode !== AnimationModes.length - 1 ? onNextVis : undefined}
+          />
+        </div>
       </div>
     </CanvasContext.Provider>
   );
