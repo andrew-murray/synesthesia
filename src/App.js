@@ -20,7 +20,9 @@ class App extends React.Component
 
   constructor(props)
   {
-    super(props)
+    super(props);
+    // convenient debug handle
+    window.app = this;
     this.trackManager = new TrackManager();
   }
 
@@ -42,7 +44,6 @@ class App extends React.Component
 
     const setFileContent = (content) =>
     {
-
       this.trackManager.load(content)
         .then(manager=>{ manager.play(); })
         .then( ()=>{this.setState( { active: true } );} )
