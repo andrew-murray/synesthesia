@@ -1,6 +1,5 @@
 import React from 'react'
 import FileImport from "./FileImport";
-import Button from '@mui/material/Button';
 import TitledDialog from "./TitledDialog"
 import './App.css';
 
@@ -27,7 +26,6 @@ class TitleScreen extends React.Component
           />
       </React.Fragment>
     );
-    const { classes } = this.props;
     return (
       <div className="App">
         <div>
