@@ -203,22 +203,21 @@ function AudioScreen(props) {
   {
     const nextMode = Math.min( animationMode + 1, AnimationModes.length - 1 );
     setAnimationMode( nextMode );
-    event.preventDefault();
   };
 
   const onPrevVis = (event) =>
   {
     const nextMode = Math.max( animationMode - 1, 0 );
     setAnimationMode( nextMode );
-    event.preventDefault();
   };
 
   return (
     <CanvasContext.Provider value={{ ctx }}>
-      <div
-        onClick={props.trackManager.pauseUnpause}
-      >
-        <canvas width={props.width} height={props.height} ref={canvasRef}></canvas>
+      <div>
+        <canvas
+          width={props.width} height={props.height} ref={canvasRef}
+          onClick={props.trackManager.pauseUnpause}
+        />
         <div style={{position: "fixed", bottom: "1em", right: "1em"}}>
           <NavControls
             onPrev={ animationMode !== 0 ? onPrevVis : undefined}
