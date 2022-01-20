@@ -5,8 +5,11 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Fab from '@mui/material/Fab';
 
-function PlaybackControls(props)
+function NavControls(props)
 {
+  // todo: I can't do this
+  // "button can't appear as a descendent of button"
+  // this could be related to my event misfires, but unlikely
   return (
     <Fab variant="extended"
       disableRipple
@@ -29,4 +32,4 @@ function PlaybackControls(props)
    );
 };
 
-export default PlaybackControls;
+export default NavControls;

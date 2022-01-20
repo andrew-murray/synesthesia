@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import TrackManager from "./TrackManager";
-import PlaybackControls from "./PlaybackControls";
+import NavControls from "./NavControls";
 import * as mathjs from "mathjs";
 
 export const CanvasContext = createContext();
@@ -199,16 +199,18 @@ function AudioScreen(props) {
     };
   });
 
-  const onNextVis = () =>
+  const onNextVis = (event) =>
   {
     const nextMode = Math.min( animationMode + 1, AnimationModes.length - 1 );
     setAnimationMode( nextMode );
+    event.preventDefault();
   };
 
-  const onPrevVis = () =>
+  const onPrevVis = (event) =>
   {
     const nextMode = Math.max( animationMode - 1, 0 );
     setAnimationMode( nextMode );
+    event.preventDefault();
   };
 
   return (
@@ -218,7 +220,7 @@ function AudioScreen(props) {
       >
         <canvas width={props.width} height={props.height} ref={canvasRef}></canvas>
         <div style={{position: "fixed", bottom: "1em", right: "1em"}}>
-          <PlaybackControls
+          <NavControls
             onPrev={ animationMode !== 0 ? onPrevVis : undefined}
             onNext={ animationMode !== AnimationModes.length - 1 ? onNextVis : undefined}
           />
