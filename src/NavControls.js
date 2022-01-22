@@ -11,9 +11,7 @@ function NavControls(props)
   // "button can't appear as a descendent of button"
   // this could be related to my event misfires, but unlikely
   return (
-    <Fab variant="extended"
-      disableRipple
-    >
+    <div style={{backgroundColor: "#ffffff", borderRadius: "2em"}}>
       <ButtonGroup>
         <IconButton
           onClick={props.onPrev ? props.onPrev : undefined}
@@ -28,7 +26,7 @@ function NavControls(props)
           <ArrowForwardIosIcon />
         </IconButton>
       </ButtonGroup>
-    </Fab>
+    </div>
    );
 };
 
