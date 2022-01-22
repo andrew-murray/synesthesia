@@ -55,16 +55,17 @@ class TrackManager
     Tone.Transport.start();
   }
 
-  getFrequencyData = (size) =>
+  getFrequencyData = (fftSize) =>
   {
-    this.configureAnalysers(size);
+    this.configureAnalysers(fftSize);
     this.analyser.getByteFrequencyData(this.frequencyBuffer);
     return this.frequencyBuffer;
   }
 
-  getTimeData = (size) =>
+  // note that the passed fftSize ~= 2 * the length of the output buffer
+  getTimeData = (fftSize) =>
   {
-    this.configureAnalysers(size);
+    this.configureAnalysers(fftSize);
     this.analyser.getTimeDomainData(this.timeDomainBuffer);
     return this.timeDomainBuffer;
   }
