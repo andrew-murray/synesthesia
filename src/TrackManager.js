@@ -23,7 +23,7 @@ class TrackManager
 
   configureAnalysers = (resolution) =>
   {
-    if(!this.analyser)
+    if(!this.analyser || this.analyser.fftSize !== resolution)
     {
       this.analyser = Tone.getContext().createAnalyser();
       this.player.connect(this.analyser);
@@ -57,14 +57,14 @@ class TrackManager
 
   getFrequencyData = (size) =>
   {
-    if(!this.analyser || this.analyser.fftSize !== size){ this.configureAnalysers(size); }
+    this.configureAnalysers(size);
     this.analyser.getByteFrequencyData(this.frequencyBuffer);
     return this.frequencyBuffer;
   }
 
   getTimeData = (size) =>
   {
-    if(!this.analyser || this.analyser.fftSize !== size){ this.configureAnalysers(size); }
+    this.configureAnalysers(size);
     this.analyser.getTimeDomainData(this.timeDomainBuffer);
     return this.timeDomainBuffer;
   }
