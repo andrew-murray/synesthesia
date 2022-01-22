@@ -26,6 +26,9 @@ function AudioScreen(props) {
   const [animationMode, setAnimationMode] = useState(0);
   const [hovered, setHovered] = useState(false);
 
+  const fadeDuration = 500;
+  const inactivityTimeout = 1000;
+
   useEffect(() => {
     setCtx(canvasRef.current.getContext("2d"));
   }, []);
@@ -34,11 +37,7 @@ function AudioScreen(props) {
   let activeTimeout = null;
   useEffect(()=>{
     return ()=>{
-      if(activeTimeout!==null)
-      {
-        clearTimeout(activeTimeout);
-        activeTimeout = null;
-      }
+      clearTimeout(activeTimeout);
     }
   });
 
@@ -86,7 +85,7 @@ function AudioScreen(props) {
       ()=>{
         setHovered(false);
       },
-      1000
+      inactivityTimeout
     );
   };
 
@@ -115,7 +114,7 @@ function AudioScreen(props) {
         onClick={props.trackManager.pauseUnpause}
         onMouseMove={onMouseHover}
       />
-      <Fade in={hovered} timeout={500}>
+      <Fade in={hovered} timeout={fadeDuration}>
         <div style={{position: "fixed", bottom: "1em", right: "1em"}}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
@@ -126,7 +125,7 @@ function AudioScreen(props) {
           />
         </div>
       </Fade>
-      <Fade in={hovered} timeout={500}>
+      <Fade in={hovered} timeout={fadeDuration}>
         <div style={{position: "fixed", top: "1em", right: "1em"}}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
