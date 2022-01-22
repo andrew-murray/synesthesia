@@ -10,7 +10,7 @@ function plotter(props)
 {
   if(props.ctx)
   {
-    const frequencyBytes = props.trackManager.getFrequencyData(128);
+    const frequencyBytes = props.trackManager.getFrequencyData(256);
     const bufferLength = frequencyBytes.length
 
     props.ctx.fillStyle = 'rgb(0, 0, 0)';
