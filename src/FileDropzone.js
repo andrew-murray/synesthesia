@@ -34,7 +34,7 @@ function MyDropzone(props) {
             variant={isDragActive ? "contained" : "outlined"}
             style={{width: "inherit", height: "inherit"}}
           >
-            <UploadFileIcon />
+            <UploadFileIcon className="Icon3x" />
           </IconButton>
       }
     </div>

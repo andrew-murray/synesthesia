@@ -4,6 +4,7 @@ import TitleScreen from "./TitleScreen";
 import React from "react";
 import TrackManager from "./TrackManager";
 import AudioScreen from "./AudioScreen";
+import Card from "@mui/material/Card"
 
 // http://www.openmusicarchive.org/ could be used for example music
 
@@ -53,21 +54,21 @@ class App extends React.Component
       <div className="App">
         { this.state.active === false &&
           <header className="App-header">
-              <TitleScreen
-                onOpen={(fileState)=>{
-                  setFileContent(fileState.content);
-                }}
-              />
+            <Card style={{width: "10em", height: "10em", borderRadius: "5em"}}>
+                <TitleScreen
+                  onOpen={(fileState)=>{
+                    setFileContent(fileState.content);
+                  }}
+                />
+            </Card>
           </header>
         }
         { this.state.active === true && this.state.width !== 0 && this.state.height !== 0 &&
-          <header className="App-header">
-            <AudioScreen
-              trackManager={this.trackManager}
-              width={this.state.width}
-              height={this.state.height}
-            />
-          </header>
+          <AudioScreen
+            trackManager={this.trackManager}
+            width={this.state.width}
+            height={this.state.height}
+          />
         }
       </div>
     );

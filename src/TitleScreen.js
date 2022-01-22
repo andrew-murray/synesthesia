@@ -1,6 +1,6 @@
 import React from 'react'
-import FileImport from "./FileImport";
 import TitledDialog from "./TitledDialog"
+import FileDropzone from "./FileDropzone";
 import './App.css';
 
 class TitleScreen extends React.Component
@@ -18,19 +18,14 @@ class TitleScreen extends React.Component
     };
 
     const controls = (
-      <React.Fragment>
-        <FileImport
-          variant="contained"
-          onImport={handleFileImport}
-          accept=".mp3"
-          />
-      </React.Fragment>
+      <FileDropzone
+        onImport={handleFileImport}
+        accept=".mp3"
+      />
     );
     return (
-      <div className="App">
-        <div>
-          {controls}
-        </div>
+      <React.Fragment>
+        {controls}
         { !!this.state.error &&
           <TitledDialog
             title="Something went wrong."
@@ -40,7 +35,7 @@ class TitleScreen extends React.Component
             {this.state.error}
           </TitledDialog>
         }
-      </div>
+      </React.Fragment>
     );
   }
 };
