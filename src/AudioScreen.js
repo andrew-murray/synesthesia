@@ -107,6 +107,11 @@ function AudioScreen(props) {
     createTimeout();
   };
 
+  // TODO: Think about pages.mtu.edu/~suits/notefreqs.html
+  // and tune our frequencyData to get more sensible frequencies out? rather than it just being tuned to the mechanics of speakers
+  // note that hz ~ note is nonlinear (c#0 - c0 ~= 1hz, b8 - a#8 ~= 450hz)
+
+
   return (
     <div>
       <canvas
