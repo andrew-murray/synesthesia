@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import TrackManager from "./TrackManager";
 import NavControls from "./NavControls";
@@ -126,7 +126,7 @@ function AudioScreen(props) {
         </div>
       </Fade>
       <Fade in={hovered} timeout={fadeDuration}>
-        <div style={{position: "fixed", top: "1em", right: "1em"}}
+        <div style={{position: "fixed", top: "1em", right: "1em", width: "15em"}}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >

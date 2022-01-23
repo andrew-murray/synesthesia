@@ -1,9 +1,8 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
 import PropTypes from 'prop-types';
 
 /*
@@ -30,35 +29,38 @@ export default function InputSlider(props) {
   };
 
   return (
-    <Box>
-      <Typography id="input-slider" gutterBottom>
-        {props.name}
-      </Typography>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs>
-          <Slider
-            value={typeof value === 'number' ? value : 0}
-            onChange={handleSliderChange}
-            aria-labelledby="input-slider"
-          />
-        </Grid>
-        <Grid item>
-          <Input
-            value={value}
-            size="small"
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            inputProps={{
-              // step: 10,
-              min: props.min,
-              max: props.max,
-              type: 'number',
-              'aria-labelledby': 'input-slider',
-            }}
-          />
-        </Grid>
+    <Grid container justifyContent="space-between">
+      <Grid item xs={3}>
+        <InputLabel>
+          {props.name}
+        </InputLabel>
       </Grid>
-    </Box>
+      <Grid item xs={4}>
+        <Slider
+          value={typeof value === 'number' ? value : 0}
+          onChange={handleSliderChange}
+          aria-labelledby="input-slider"
+          min={props.min}
+          max={props.max}
+          step={props.step ? props.step : (props.max - props.min)/100}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Input
+          value={value}
+          size="small"
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          inputProps={{
+            // step: 10,
+            min: props.min,
+            max: props.max,
+            type: 'number',
+            'aria-labelledby': 'input-slider',
+          }}
+        />
+      </Grid>
+    </Grid>
   );
 }
 
