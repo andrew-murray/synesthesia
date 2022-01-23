@@ -6,34 +6,41 @@ import InputLabel from '@mui/material/InputLabel';
 import PropTypes from 'prop-types';
 
 /*
-  This is ripped from https://mui.com/components/slider/ and generalised a little.
+  This was originally ripped from an example on https://mui.com/components/slider/ and generalised a little.
 */
 
 export default function InputSlider(props) {
   const [value, setValue] = React.useState(props.default);
 
   const handleSliderChange = (event, newValue) => {
-    if(newValue)
-    {
-      setValue(newValue);
-      props.onChange(newValue);
-    }
+    setValue(newValue);
+    props.onChange(newValue);
+  };
+
+  // TODO: Bug observed, empty TextField is not considered invalid but it should be
+
+  const inputIsValid = (value) =>
+  {
+    const number = Number(value);
+    // note that this handles NaN correctly too
+    return number >= props.min && number <= props.max;
   };
 
   const handleInputChange = (event) => {
-    const number = Number(event.target.value);
-    if( number >= props.min && number <= props.max )
+    setValue(event.target.value);
+    if(inputIsValid(event.target.value))
     {
-      setValue(newValue);
-      props.onChange(newValue);
+      props.onChange(Number(value));
     }
   };
 
   const handleBlur = () => {
     if (value < props.min) {
       setValue(props.min);
+      props.onChange(props.min);
     } else if (value > props.max) {
       setValue(props.max);
+      props.onChange(props.max);
     }
   };
 
@@ -57,6 +64,7 @@ export default function InputSlider(props) {
       <Grid item xs={3}>
         <Input
           value={value}
+          error={!inputIsValid(value)}
           size="small"
           onChange={handleInputChange}
           onBlur={handleBlur}
