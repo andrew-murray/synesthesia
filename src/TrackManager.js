@@ -19,14 +19,13 @@ class TrackManager
   constructor()
   {
     ensureToneInitialised();
+    this.analyser = Tone.getContext().createAnalyser();
   }
 
   configureAnalysers = (resolution) =>
   {
-    if(!this.analyser || this.analyser.fftSize !== resolution)
+    if(this.analyser.fftSize !== resolution)
     {
-      this.analyser = Tone.getContext().createAnalyser();
-      this.player.connect(this.analyser);
       this.analyser.fftSize = resolution;
       this.frequencyBuffer = new Uint8Array(this.analyser.frequencyBinCount);
       this.timeDomainBuffer = new Uint8Array(this.analyser.fftSize);
@@ -44,6 +43,7 @@ class TrackManager
         this.player.stop();
       }
       this.player = new Tone.Player(decoded).toDestination().sync();
+      this.player.connect(this.analyser);
       this.player.start();
       return this;
     })});
