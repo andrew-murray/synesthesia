@@ -13,11 +13,20 @@ export default function InputSlider(props) {
   const [value, setValue] = React.useState(props.default);
 
   const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
+    if(newValue)
+    {
+      setValue(newValue);
+      props.onChange(newValue);
+    }
   };
 
   const handleInputChange = (event) => {
-    setValue(event.target.value === '' ? '' : Number(event.target.value));
+    const number = Number(event.target.value);
+    if( number >= props.min && number <= props.max )
+    {
+      setValue(newValue);
+      props.onChange(newValue);
+    }
   };
 
   const handleBlur = () => {

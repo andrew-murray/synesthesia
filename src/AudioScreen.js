@@ -130,7 +130,9 @@ function AudioScreen(props) {
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
-          <SettingsAccordion />
+          <SettingsAccordion
+            trackManager={props.trackManager}
+          />
         </div>
       </Fade>
     </div>
