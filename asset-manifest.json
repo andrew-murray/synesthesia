@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/synesthesia/static/css/main.6eea749e.css",
+    "main.js": "/synesthesia/static/js/main.a80ff0a2.js",
+    "static/js/787.a14ba9c5.chunk.js": "/synesthesia/static/js/787.a14ba9c5.chunk.js",
+    "index.html": "/synesthesia/index.html",
+    "main.6eea749e.css.map": "/synesthesia/static/css/main.6eea749e.css.map",
+    "main.a80ff0a2.js.map": "/synesthesia/static/js/main.a80ff0a2.js.map",
+    "787.a14ba9c5.chunk.js.map": "/synesthesia/static/js/787.a14ba9c5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6eea749e.css",
+    "static/js/main.a80ff0a2.js"
+  ]
+}
