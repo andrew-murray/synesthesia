@@ -1,5 +1,5 @@
 import * as mathjs from "mathjs";
-
+import NoteGetter from "./NoteGetter";
 function fmtColor(v)
 {
   const val = "rgb(" + v[0].toString() + "," + v[1].toString() + ","+ v[2].toString() + ")";
@@ -14,6 +14,121 @@ const blend = (a,b,weight) =>
   );
 }
 
+function notePlot(props)
+{
+  if(props.ctx)
+  {
+    const noteGetter = new NoteGetter(props.trackManager);
+    const noteFreqs = noteGetter.getNoteFrequencies(180);
+    const bufferLength = noteFreqs.length;
+
+    props.ctx.fillStyle = 'rgb(0, 0, 0)';
+    props.ctx.fillRect(0, 0, props.width, props.height);
+    //Draw spectrum
+
+    // todo: this is very hacky, let's not worry that it's a copy-paste of the normal bar-chart
+
+    const atomsPerGap = 1;
+    // we assume we're plotting even octaves of Cs
+    const octaves = Math.ceil(bufferLength / 12);
+    const bufferLengthOctaves = octaves * 12;
+
+    // we only need to allocate space for the white notes really
+    const whiteNotesPerOctave = 7;
+    const atomsPerWhiteNote = 8;
+    // we need one extra c on the end, to make our drawing work
+    const totalAtoms = octaves * whiteNotesPerOctave * (atomsPerGap + atomsPerWhiteNote) + atomsPerWhiteNote;
+    const pixelsPerAtom = props.width / totalAtoms;
+    // note: this has to be smaller than atomsPerWhiteNote to not break our structure
+    const blackNoteWidthAtoms = atomsPerWhiteNote * 0.75;
+    const blackNoteActiveWidthAtoms = blackNoteWidthAtoms * 0.75;
+    // one loop for whitenotes, one for black so we don't have to manage complex shapes
+
+    const whiteNoteIndexLookup = [
+      0, // c
+      0, // c#
+      1, // d
+      1, // d#
+      2, // e
+      3, // f
+      3, // f#
+      4, // g
+      4, // g#
+      5, // a
+      5, // a#
+      6, // b
+    ];
+
+    // note we could do this better, by thinking in terms of each white note in an octave instead
+    // bute then we might have to do awkward things for the lookup
+    for(let i  = 0; i < bufferLengthOctaves; ++i)
+    {
+      const mod12 = ( i % 12 );
+      const blackNote = ( mod12 === 1 ) // C#
+        || (mod12 === 3) // D#
+        || (mod12 === 6) // F#
+        || (mod12 === 8) // G#
+        || (mod12 === 10); // A#
+      if(blackNote)
+      {
+        // todo;
+        continue;
+      }
+      const octaveIndex = Math.floor(i / 12);
+      const whiteNoteIndex = (octaveIndex * whiteNotesPerOctave) + whiteNoteIndexLookup[ mod12 ];
+      const posX = whiteNoteIndex * ( atomsPerWhiteNote + atomsPerGap ) * pixelsPerAtom;
+      const posY = 0;
+
+      const active = (i < bufferLength) && noteFreqs[i] === 1;
+      if(active)
+      {
+        props.ctx.fillStyle = 'rgb(230, 120, 0)';
+      }
+      else
+      {
+        props.ctx.fillStyle = 'rgb(255,255,255)';
+      }
+      props.ctx.fillRect(posX, posY, pixelsPerAtom * atomsPerWhiteNote, props.height);
+    }
+
+    // blackNote loop
+    for(let i  = 0; i < bufferLengthOctaves; ++i)
+    {
+      const mod12 = ( i % 12 );
+      const blackNote = ( mod12 === 1 ) // C#
+        || (mod12 === 3) // D#
+        || (mod12 === 6) // F#
+        || (mod12 === 8) // G#
+        || (mod12 === 10); // A#
+      if(!blackNote)
+      {
+        continue;
+      }
+      const octaveIndex = Math.floor(i / 12);
+      const prevWhiteNoteIndex = (octaveIndex * whiteNotesPerOctave) + whiteNoteIndexLookup[ mod12 ];
+      const blackNoteCenterPixel = pixelsPerAtom * ( prevWhiteNoteIndex * (atomsPerWhiteNote + atomsPerGap) + (atomsPerWhiteNote) + atomsPerGap/2.0);
+      const blackNoteWidth = blackNoteWidthAtoms * pixelsPerAtom;
+      const blackNoteHeight = props.height * 0.75;
+      {
+        const posX = blackNoteCenterPixel - (blackNoteWidth/2);
+        props.ctx.fillStyle = 'rgb(0, 0, 0)';
+        props.ctx.fillRect(posX, 0, blackNoteWidth,  blackNoteHeight);
+      }
+
+      const active = (i < bufferLength) && noteFreqs[i] === 1;
+      // let's fill the inactive portion regardless
+
+      if(active)
+      {
+        props.ctx.fillStyle = 'rgb(230, 120, 0)';
+        const activeWidthPixels = blackNoteActiveWidthAtoms * pixelsPerAtom;
+        const posX = blackNoteCenterPixel - (activeWidthPixels / 2)
+        const outlineWidth = (blackNoteWidth - activeWidthPixels) / 2;
+        props.ctx.fillRect(posX, 0, activeWidthPixels,  blackNoteHeight - outlineWidth);
+      }
+    }
+  }
+}
 
 function plotter(props)
 {
@@ -135,20 +250,10 @@ function speakerPlotter(props)
   }
 }
 
-let Animations = [
+const Animations = [
   { name: "BARS", func: plotter, settings: { }},
-  { name: "RADIAL", func: speakerPlotter, settings: { }}
+  { name: "RADIAL", func: speakerPlotter, settings: { }},
+  { name: "NOTES", func: notePlot, settings: {}}
 ];
-
-Animations.get = function(name)
-{
-  for(let ix = 0; ix < Animations.length; ++ix)
-  {
-    if(Animations[ix].name === name)
-    {
-      return Animations[ix];
-    }
-  }
-};
 
 export default Animations;
